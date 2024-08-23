@@ -248,22 +248,29 @@ index f2b82c462fbb..8c73e9371764 100644
  
  	if (length < 0)	/* sorry, but loff_t says... */
  		return -EINVAL;
-@@ -370,6 +386,20 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
+@@ -373,10 +373,27 @@ SYSCALL_DEFINE3(faccessat, int, dfd, const char __user *, filename, int, mode)
+ 	struct vfsmount *mnt;
  	int res;
  	unsigned int lookup_flags = LOOKUP_FOLLOW;
++	
++#ifdef CONFIG_KSU_SUSFS_SUS_PATH
++       struct filename* fname;
++       int status;
++       int error;
++#endif	
++	
+ #ifdef CONFIG_KSU
+ 	ksu_handle_faccessat(&dfd, &filename, &mode, NULL);
+ #endif
  
 +#ifdef CONFIG_KSU_SUSFS_SUS_PATH
-+	struct filename* fname;
-+	int status;
-+	int error;
++       fname = getname_safe(filename);
++       status = susfs_sus_path_by_filename(fname, &error, SYSCALL_FAMILY_ALL_ENOENT);
++       putname_safe(fname);
 +
-+	fname = getname_safe(filename);
-+	status = susfs_sus_path_by_filename(fname, &error, SYSCALL_FAMILY_ALL_ENOENT);
-+	putname_safe(fname);
-+
-+	if (status) {
-+		return error;
-+	}
++       if (status) {
++              return error;
++       }
 +#endif
 +
  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
