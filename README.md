@@ -1,4 +1,9 @@
-## Introduction ##
+# [Important Notice] #
+_**Master repo will stay on version 1.3.8 forever, please refer to other branches for latest SUSFS code for different kernel version.**_ 
+
+
+
+# Introduction #
 An addon root hiding kernel patches and userspace module for KernelSU.
 
 The ksu_susfs userspace tool and ksu module requires a susfs patched kernel to work.
