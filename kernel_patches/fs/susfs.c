@@ -614,7 +614,7 @@ void susfs_set_log(bool enabled) {
 }
 #endif // #ifdef CONFIG_KSU_SUSFS_ENABLE_LOG
 
-/* spoof_bootconfig */
+/* spoof_proc_cmdline */
 #ifdef CONFIG_KSU_SUSFS_SPOOF_PROC_CMDLINE
 char *fake_proc_cmdline = NULL;
 int susfs_set_proc_cmdline(char* __user user_fake_proc_cmdline) {

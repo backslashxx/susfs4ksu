@@ -199,7 +199,7 @@ int susfs_spoof_uname(struct new_utsname* tmp);
 #ifdef CONFIG_KSU_SUSFS_ENABLE_LOG
 void susfs_set_log(bool enabled);
 #endif
-/* spoof_bootconfig */
+/* spoof_proc_cmdline */
 #ifdef CONFIG_KSU_SUSFS_SPOOF_PROC_CMDLINE
 int susfs_set_proc_cmdline(char* __user user_fake_proc_cmdline);
 int susfs_spoof_proc_cmdline(struct seq_file *m);
