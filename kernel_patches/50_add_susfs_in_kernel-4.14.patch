@@ -410,7 +410,7 @@ index 69f96d3fa1e6..ad5f39e1f986 100644
  	return filp;
  }
 diff --git a/fs/namespace.c b/fs/namespace.c
-index d772fe46e6b5..eba1b84dd45b 100644
+index d772fe46e6b5..68dde36c3143 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -31,6 +31,23 @@
@@ -518,7 +518,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  	lock_mount_hash();
  	list_add_tail(&mnt->mnt_instance, &sb->s_mounts);
  	unlock_mount_hash();
-@@ -2022,6 +2085,17 @@ static int invent_group_ids(struct mount *mnt, bool recurse)
+@@ -2022,6 +2115,17 @@ static int invent_group_ids(struct mount *mnt, bool recurse)
  {
  	struct mount *p;
  
@@ -536,7 +536,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  	for (p = mnt; p; p = recurse ? next_mnt(p, mnt) : NULL) {
  		if (!p->mnt_group_id && !IS_MNT_SHARED(p)) {
  			int err = mnt_alloc_group_id(p);
-@@ -2364,6 +2438,24 @@ static int do_loopback(struct path *path, const char *old_name,
+@@ -2364,6 +2468,24 @@ static int do_loopback(struct path *path, const char *old_name,
  		umount_tree(mnt, UMOUNT_SYNC);
  		unlock_mount_hash();
  	}
@@ -561,7 +561,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  out2:
  	unlock_mount(mp);
  out:
-@@ -2963,6 +3055,13 @@ long do_mount(const char *dev_name, const char __user *dir_name,
+@@ -2963,6 +3085,13 @@ long do_mount(const char *dev_name, const char __user *dir_name,
  	else
  		retval = do_new_mount(&path, type_page, sb_flags, mnt_flags,
  				      dev_name, data_page);
@@ -575,7 +575,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  dput_out:
  	path_put(&path);
  	return retval;
-@@ -3040,6 +3139,10 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
+@@ -3040,6 +3169,10 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
  	struct mount *old;
  	struct mount *new;
  	int copy_flags;
@@ -586,7 +586,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  
  	BUG_ON(!ns);
  
-@@ -3059,6 +3162,13 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
+@@ -3059,6 +3192,13 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
  	copy_flags = CL_COPY_UNBINDABLE | CL_EXPIRE;
  	if (user_ns != ns->user_ns)
  		copy_flags |= CL_SHARED_TO_SLAVE | CL_UNPRIVILEGED;
@@ -600,7 +600,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  	new = copy_tree(old, old->mnt.mnt_root, copy_flags);
  	if (IS_ERR(new)) {
  		namespace_unlock();
-@@ -3095,6 +3205,29 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
+@@ -3095,6 +3235,29 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
  		while (p->mnt.mnt_root != q->mnt.mnt_root)
  			p = next_mnt(p, old);
  	}
@@ -630,7 +630,7 @@ index d772fe46e6b5..eba1b84dd45b 100644
  	namespace_unlock();
  
  	if (rootmnt)
-@@ -3635,3 +3768,24 @@ const struct proc_ns_operations mntns_operations = {
+@@ -3635,3 +3798,24 @@ const struct proc_ns_operations mntns_operations = {
  	.install	= mntns_install,
  	.owner		= mntns_owner,
  };
