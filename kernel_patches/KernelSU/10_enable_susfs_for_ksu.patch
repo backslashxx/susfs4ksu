@@ -270,7 +270,7 @@ index 66929756..e686fad3 100644
 +
  # Keep a new line here!! Because someone may append config
 diff --git a/kernel/core_hook.c b/kernel/core_hook.c
-index 009216ef..669960e8 100644
+index 009216ef..0163f37d 100644
 --- a/kernel/core_hook.c
 +++ b/kernel/core_hook.c
 @@ -33,6 +33,10 @@
@@ -284,7 +284,7 @@ index 009216ef..669960e8 100644
  #include "allowlist.h"
  #include "arch.h"
  #include "core_hook.h"
-@@ -45,6 +49,21 @@
+@@ -45,6 +49,20 @@
  #include "throne_tracker.h"
  #include "kernel_compat.h"
  
@@ -300,13 +300,12 @@ index 009216ef..669960e8 100644
 +
 +extern u32 susfs_zygote_sid;
 +extern void susfs_run_try_umount_for_current_mnt_ns(void);
-+extern int susfs_sus_su_working_mode;
 +#endif // #ifdef CONFIG_KSU_SUSFS
 +
  static bool ksu_module_mounted = false;
  
  extern int handle_sepolicy(unsigned long arg3, void __user *arg4);
-@@ -376,6 +395,319 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
+@@ -376,6 +394,319 @@ int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
  		return 0;
  	}
  
@@ -626,7 +625,7 @@ index 009216ef..669960e8 100644
  	// all other cmds are for 'root manager'
  	if (!from_manager) {
  		return 0;
-@@ -460,7 +792,11 @@ static int ksu_umount_mnt(struct path *path, int flags)
+@@ -460,7 +791,11 @@ static int ksu_umount_mnt(struct path *path, int flags)
  #endif
  }
  
@@ -638,7 +637,7 @@ index 009216ef..669960e8 100644
  {
  	struct path path;
  	int err = kern_path(mnt, 0, &path);
-@@ -484,6 +820,18 @@ static void try_umount(const char *mnt, bool check_mnt, int flags)
+@@ -484,6 +819,18 @@ static void try_umount(const char *mnt, bool check_mnt, int flags)
  	}
  }
  
@@ -657,7 +656,7 @@ index 009216ef..669960e8 100644
  int ksu_handle_setuid(struct cred *new, const struct cred *old)
  {
  	// this hook is used for umounting overlayfs for some uid, if there isn't any module mounted, just ignore it!
-@@ -503,6 +851,17 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
+@@ -503,6 +850,17 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
  		return 0;
  	}
  
@@ -675,7 +674,7 @@ index 009216ef..669960e8 100644
  	if (!is_appuid(new_uid) || is_unsupported_uid(new_uid.val)) {
  		// pr_info("handle setuid ignore non application or isolated uid: %d\n", new_uid.val);
  		return 0;
-@@ -512,6 +871,12 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
+@@ -512,6 +870,12 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
  		// pr_info("handle setuid ignore allowed application: %d\n", new_uid.val);
  		return 0;
  	}
@@ -688,7 +687,7 @@ index 009216ef..669960e8 100644
  
  	if (!ksu_uid_should_umount(new_uid.val)) {
  		return 0;
-@@ -521,21 +886,31 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
+@@ -521,21 +885,31 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
  #endif
  	}
  
@@ -720,7 +719,7 @@ index 009216ef..669960e8 100644
  	// fixme: use `collect_mounts` and `iterate_mount` to iterate all mountpoint and
  	// filter the mountpoint whose target is `/data/adb`
  	try_umount("/system", true, 0);
-@@ -546,6 +921,7 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
+@@ -546,6 +920,7 @@ int ksu_handle_setuid(struct cred *new, const struct cred *old)
  	// try umount ksu temp path
  	try_umount("/debug_ramdisk", false, MNT_DETACH);
  	try_umount("/sbin", false, MNT_DETACH);
